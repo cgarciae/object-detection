@@ -1,0 +1,11 @@
+
+training:
+  learning_rate: 0.001
+
+preprocessing:
+  samples_per_group: 2179
+
+
+data_augmentation:
+  n_augmenters: 3
+  batch_size: 100
