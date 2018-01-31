@@ -22,3 +22,12 @@ RUN apt-get install -y libsm6 libxext6
 RUN apt-get install -y libxrender-dev
 
 RUN pip install cytoolz
+
+RUN pip install -U dicto
+RUN pip install click
+
+RUN apt-get install -y wget
+
+RUN apt-get install -y python3-tk
+
+ENV PYTHONPATH $PYTHONPATH:/code:/code/slim

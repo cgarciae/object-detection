@@ -1,0 +1,17 @@
+item {
+  id: 0
+  name: 'wheels'
+  display_name: 'Wheels'
+}
+
+item {
+  id: 1
+  name: 'body'
+  display_name: 'Body'
+}
+
+item {
+  id: 2
+  name: 'hoe'
+  display_name: 'Hoe'
+}

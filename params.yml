@@ -2,10 +2,20 @@
 training:
   learning_rate: 0.001
 
+
 preprocessing:
   samples_per_group: 2179
+  ignore_difficult_instances: False
+  output_path: "/code/data"
+  split: 0.8
+  batch_size: 10
 
 
 data_augmentation:
+  n_copies: 10
   n_augmenters: 3
-  batch_size: 100
+
+label_map_dict:
+  wheels: 0
+  body: 1
+  hoe: 2

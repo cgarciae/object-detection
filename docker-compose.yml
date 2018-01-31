@@ -9,5 +9,8 @@ services:
     working_dir: /code
     ports:
       - 8888:8888
+    environment:
+      LC_ALL: C.UTF-8
+      LANG: C.UTF-8 
     command: jupyter lab --allow-root --NotebookApp.iopub_data_rate_limit=1.0e10 .
     
