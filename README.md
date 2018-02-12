@@ -110,15 +110,24 @@ docker-compose run jupyter bash scripts/download_model.sh
 ```
 this should create the `models` folder and download the tensorflow checkpoints from `ssd_inception_v2_coco` inside.
 
-## Train
-```bash
-docker-compose run jupyter bash scripts/train.sh
-```
+## Train & Eval
 #### Config
-There are 2 files which configure the training of our model:
+There are 2 files which configure the training and evaluation of our model:
 * `ssd_inception_v2.config`
 * `label_map.pbtxt`
 
 The first one is very complex and lets you specify varios aspects of the training, it was taken from the `object_detection/samples/configs` and modified according to the structure of our project. The second one just specifies the indexes for each category.
 
+#### Train
+Run
+```bash
+docker-compose run jupyter bash scripts/train.sh
+```
+This might take a while, you possibly need a machine with > 4GB of GPU RAM.
+
 ## Evaluate
+Run
+```bash
+docker-compose run jupyter bash scripts/eval.sh
+```
+This might take a while.
