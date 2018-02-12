@@ -38,7 +38,20 @@ Finally, we have to compile some protobufs that google doesn't include by defaul
 docker-compose run jupyter bash scripts/create_protos.sh
 ```
 
-## Data Augmentation
+## Data 
+
+#### Visualization
+A jupyter notebook was created to explore the data a little. You open the notebook by running the commands:
+```
+docker-compose up -d
+docker-compose logs -f
+```
+After jupyter start it should print a link, copy the link from the console to a web browser. On jupyter navigate to the notebooks folder and open `data-exploration.ipynb`. You will see 2 main visualizations:
+* A graph showing the distribution of labels
+* The images resulting from data augmentation (discussed next)
+
+#### Data Augmentation
+
 Data augmentation was used with the idea of helping the model to generalize better by broadening the distribution of the data with various types of random filters. The library [imgaug](https://github.com/aleju/imgaug) was used for this purpose. The following augmenter where used:
 
 ```python
@@ -64,18 +77,48 @@ The resulting randomized images look like this
 
 ![data-augmentation](readme/data-augmentation.png "data-augmentation")
 
+
 #### Discussion on Data Augmentation
 Data Augmentation generally improves the performace of a model as it forces it to generalize more since it can't depend on any specific details being present in the image but rather it has to abstract more the entities its trying to recognize. However, since we are doing transfer learning with fine tunning by using the last layer of a pretrained model, this layer might already be good enough and data augmentation will have less effect. 
 
 Nevertheless having more data is always better and the variations will still help.
 
-#### Convert base data to tfrecords
-```
-docker-compose run jupyter python3 src/cli.py create_data training
-```
+#### Convert data to tfrecords
+The `object_detection` module already provides various functions for converting Pascal VOC datasets (like the one privided) to tfrecords, especifically, the script `create_pascal_tf_record.py` lets you convert a whole folder of samples to this format. However, since it was decided that data augmentation was to be used, various scripts like `src/dataset.py` and `src/preprocessing.py` where created to do various tasks like:
+* Converting XML data to Python dictionaries
+* Doing data augmentation
+* Converting the augmented data to `tf.train.Example`s and writting these to disk.
 
-#### Download Model
+The development time took longer due to this extra feature. To convert the data just run the command to tfrecords just run the commands:
+
+```bash
+# training set
+docker-compose run jupyter python3 src/cli.py create_data training
+
+# test set
+docker-compose run jupyter python3 src/cli.py create_data test
+```
+This creates the files `data/training_set.record` and `data/test_set.record`. Theses operations might take a while to complete.
+
+## Model
+With the `object_detection` module you can select from a wide variety of pretrained models that you can checkout in their [model zoo](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md#coco-trained-models-coco-models). As you can see they varie in speed and accuracy (as mesured in the COCO dataset via the `mAP[^1]` metric), `ssd_inception_v2_coco` was selected for this excercise. 
+
+#### Download
+To download the model just run
 ```
 docker-compose run jupyter bash scripts/download_model.sh
 ```
+this should create the `models` folder and download the tensorflow checkpoints from `ssd_inception_v2_coco` inside.
 
+## Train
+```bash
+docker-compose run jupyter bash scripts/train.sh
+```
+#### Config
+There are 2 files which configure the training of our model:
+* `ssd_inception_v2.config`
+* `label_map.pbtxt`
+
+The first one is very complex and lets you specify varios aspects of the training, it was taken from the `object_detection/samples/configs` and modified according to the structure of our project. The second one just specifies the indexes for each category.
+
+## Evaluate
