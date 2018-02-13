@@ -1,6 +1,14 @@
 # Object Detection
 ## Introduction
-*TODO* 
+Given the task of detecting objects in images, one of the most sensible approaches is to do transfer learning by fine tunning the last layer of a pretrained model. Darknet's YOLO is a popular choice for this, however, Google's Object Detection Framework in TensorFlow includes many different models and being in TensorFlow has the benefits of having better tooling.
+
+In this project we will be using the Object Detection Framework which is already included in the folder `object_detection`. The given dataset is in the Pascal VOC format and fortunatly the framework already has scripts to deal with this formal. The general procedure will be the following:
+
+1. Get the data
+1. Visualize the data and preview the data augmentation results.
+1. Convert the raw images and labels to `tfrecords` format, data augmentation will be done in the process. 
+1. Configure the traning/evaluation pipeline (minimal, mostly modifying the existing template).
+1. Run training and evaluation scripts
 
 #### Requirements 
 Please install the following tools:
